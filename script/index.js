@@ -1,3 +1,18 @@
+const createElements = (arr) =>{
+    const htmlElements = arr.map((el) => `<span class="btn">${el}</span>`);
+    return htmlElements.join('');
+};
+
+const manageSpinner =(status)=>{
+    if(status == true){
+        document.getElementById('spinner').classList.remove('hidden');
+        document.getElementById('word-container').classList.add('hidden');
+    }else{
+         document.getElementById('word-container').classList.remove('hidden');
+        document.getElementById('spinner').classList.add('hidden');
+    }
+};
+
 const loadLessons =()=>{
     fetch('https://openapi.programming-hero.com/api/levels/all') // promise of response
     .then(res => res.json()) //promise of json data
@@ -10,6 +25,7 @@ const removeActive=()=>{
     lessonButtons.forEach(btn => btn.classList.remove('active'));
 }
 const loadLevelWord =(id)=>{
+    manageSpinner(true);
     const url = `https://openapi.programming-hero.com/api/level/${id}` ;
     fetch(url)
     .then(res=>res.json())
@@ -47,9 +63,7 @@ const displayWordDetails=(word)=>{
 
      <div class="">
        <h2 class="font-bold">সমার্থক শব্দ গুলো</h2>
-       <span class="btn">Syn1</span>
-       <span class="btn">Syn2</span>
-       <span class="btn">Syn3</span>
+       <div class="">${createElements(word.synonyms)}</div>
      </div>
     `;
     document.getElementById('word_model').showModal();
@@ -67,6 +81,7 @@ if(words.length == 0){
          <h2 class="font-bold text-4xl">নেক্সট Lesson এ যান</h2>
       </div>
    `;
+   manageSpinner(false);
     return;
 }
 
@@ -88,6 +103,7 @@ words.forEach(word => {
     `
     wordContainer.append(card);
 });
+manageSpinner(false);
 
 };
 const displayLesson=(lessons)=>{
